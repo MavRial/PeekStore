@@ -30,4 +30,6 @@ object TokenManager {
             preferences.remove(UID_KEY)
         }
     }
+
+
 }
