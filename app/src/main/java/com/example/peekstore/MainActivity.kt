@@ -9,14 +9,11 @@ import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
 import androidx.compose.ui.platform.LocalContext
-import androidx.lifecycle.ViewModel
 import androidx.navigation.compose.rememberNavController
 import com.example.peekstore.data.service.TokenManager
 import com.example.peekstore.navigation.AppScreen
 import com.example.peekstore.navigation.NavGraph
 import com.example.peekstore.presentation.home.HomeViewModel
-import com.example.peekstore.presentation.login.LoginScreen
-import com.example.peekstore.presentation.login.state.LoginState
 import com.example.peekstore.presentation.login.viewmodel.LoginViewModel
 
 
@@ -42,7 +39,7 @@ class MainActivity : ComponentActivity() {
                     }
                 }
             }
-            NavGraph(navController = navController, loginViewModel = loginViewModel , homeViewModel = homeViewModel,)
+            NavGraph(navController = navController, loginViewModel = loginViewModel , homeViewModel = homeViewModel)
         }
     }
 }

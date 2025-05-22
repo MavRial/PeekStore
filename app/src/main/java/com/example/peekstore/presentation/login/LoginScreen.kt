@@ -24,8 +24,6 @@ import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.text.input.KeyboardType
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
-import androidx.navigation.NavController
-import androidx.navigation.NavHostController
 import com.example.peekstore.presentation.login.components.ZetaButtonBasic
 import com.example.peekstore.presentation.login.components.ZetaImageLogo
 import com.example.peekstore.presentation.login.components.ZetaOutlinedTextField
@@ -40,7 +38,6 @@ import com.example.peekstore.ui.theme.ColorButton
 @Composable
 fun LoginScreen(
     loginViewModel: LoginViewModel,
-    navcontrol: NavController,
     onLoginSuccess: (String) -> Unit // Navegar a Home con UID
 ) {
     val loginState by loginViewModel.loginState
