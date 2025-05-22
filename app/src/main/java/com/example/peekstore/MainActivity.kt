@@ -6,16 +6,19 @@ import androidx.activity.compose.setContent
 import androidx.activity.enableEdgeToEdge
 import androidx.activity.viewModels
 import androidx.compose.runtime.LaunchedEffect
-import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
-import androidx.compose.ui.platform.LocalContext
+import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.remember
+import androidx.compose.runtime.setValue
 import androidx.navigation.compose.rememberNavController
-import com.example.peekstore.data.service.TokenManager
+import com.example.peekstore.data.service.FirebaseModule
 import com.example.peekstore.navigation.AppScreen
 import com.example.peekstore.navigation.NavGraph
-import com.example.peekstore.presentation.home.HomeViewModel
+import com.example.peekstore.presentation.home.viewmodel.HomeViewModel
 import com.example.peekstore.presentation.login.viewmodel.LoginViewModel
+import com.google.firebase.auth.FirebaseAuth
 
+import kotlinx.coroutines.awaitCancellation
 
 
 class MainActivity : ComponentActivity() {
@@ -26,20 +29,33 @@ class MainActivity : ComponentActivity() {
         super.onCreate(savedInstanceState)
         enableEdgeToEdge()
         setContent {
-            val context = LocalContext.current
-            val navController = rememberNavController()
-            val userUid by TokenManager.getUserUid(context).collectAsState(initial = "")
 
-            LaunchedEffect(userUid) {
-                if (!userUid.isNullOrEmpty()) {
-                    userUid?.let { uid ->
-                        navController.navigate(AppScreen.HomeScreen.passUid(uid)){
-                            popUpTo(0)
-                        }
+            val navController = rememberNavController()
+            var startDestination by remember { mutableStateOf<String?>(null) }
+
+
+            LaunchedEffect(Unit) {
+                val listener = FirebaseAuth.AuthStateListener { auth ->
+                    val user = auth.currentUser
+                    startDestination = if (user != null) {
+                        AppScreen.HomeScreen.route
+                    } else {
+                        AppScreen.LoginScreen.route
                     }
                 }
+                FirebaseModule.auth.addAuthStateListener(listener)
+
+                awaitCancellation()
             }
-            NavGraph(navController = navController, loginViewModel = loginViewModel , homeViewModel = homeViewModel)
+
+            startDestination?.let {
+                NavGraph(
+                    navController = navController,
+                    loginViewModel = loginViewModel,
+                    homeViewModel = homeViewModel,
+                    startDestination = it
+                )
+            }
         }
     }
 }
