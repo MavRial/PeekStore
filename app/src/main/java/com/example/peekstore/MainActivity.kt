@@ -9,13 +9,8 @@ import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
 import androidx.compose.ui.platform.LocalContext
-import androidx.navigation.NavType
-import androidx.navigation.compose.NavHost
-import androidx.navigation.compose.composable
 import androidx.navigation.compose.rememberNavController
-import androidx.navigation.navArgument
 import com.example.peekstore.data.service.TokenManager
-import com.example.peekstore.presentation.home.HomeScreen
 import com.example.peekstore.presentation.login.LoginScreen
 import com.example.peekstore.presentation.login.viewmodel.LoginViewModel
 
