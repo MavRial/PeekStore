@@ -10,4 +10,5 @@ data class LoginState(
     val isPasswordVisible: Boolean = false,
     val passwordVisualTransformation: VisualTransformation = PasswordVisualTransformation(),
 
+
 )
