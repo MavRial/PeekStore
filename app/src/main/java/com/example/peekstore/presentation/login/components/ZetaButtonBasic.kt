@@ -28,6 +28,6 @@ fun ZetaButtonBasic(
         ),
         modifier = modifier
     ) {
-        Text(text = text, fontSize = textSize)
+        Text(text = text, fontSize = textSize, color = Color.White)
     }
 }

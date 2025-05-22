@@ -24,7 +24,7 @@ fun NavGraph(navController: NavHostController, loginViewModel: LoginViewModel,ho
                 navcontrol = navController,
                 onLoginSuccess = { uid ->
                     navController.navigate(AppScreen.HomeScreen.passUid(uid)){
-                        popUpTo(AppScreen.LoginScreen) { inclusive = true}
+                        popUpTo(AppScreen.LoginScreen.route) { inclusive = true}
                     }
                 }
             )

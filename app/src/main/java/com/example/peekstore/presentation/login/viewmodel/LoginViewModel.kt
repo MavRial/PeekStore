@@ -64,4 +64,28 @@ class LoginViewModel(
         }
     }
 
+    fun register (context: Context,onLoginSucces: (String) -> Unit){
+        viewModelScope.launch {
+            _authResult.value = AuthResult.Loading
+
+            val result = authRepository.register(
+                loginState.value.email,
+                loginState.value.password
+            )
+
+            when(result){
+                is AuthResult.Success -> {
+                    TokenManager.saveUserUid(context,result.uid)
+                    _authResult.value = result
+                    onLoginSucces(result.uid)
+                }
+
+                is AuthResult.Error -> {
+                    _authResult.value = result
+                }
+                else -> {}
+            }
+        }
+    }
+
 }

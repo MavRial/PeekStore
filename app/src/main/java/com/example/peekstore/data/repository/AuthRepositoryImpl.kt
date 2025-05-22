@@ -13,10 +13,30 @@ class AuthRepositoryImpl: AuthRepository {
     {
         return try {
             val result = auth.signInWithEmailAndPassword(email,password).await()
-            val uid = result.user?.uid ?: return AuthResult.Error("no se pudo obtener el UID")
-            AuthResult.Success(uid)
+            val uid = result.user?.uid
+            if (uid.isNullOrEmpty()){
+                AuthResult.Error("No se pudo obtener el UiD del usuario")
+            }else {
+                AuthResult.Success(uid)
+            }
+
         }catch (e:Exception){
-            AuthResult.Error(e.message ?: "Error desconocido")
+            AuthResult.Error(e.message ?: "Error desconocido durante el login")
+        }
+    }
+
+    override suspend fun register(email:String, password:String):AuthResult
+    {
+        return try {
+            val result = auth.createUserWithEmailAndPassword(email,password).await()
+            val uid = result.user?.uid
+            if (uid.isNullOrEmpty()){
+                AuthResult.Error("No se pudo obtener el UID del usuario.")
+            } else {
+        AuthResult.Success(uid)
+    }
+        }catch (e:Exception){
+            AuthResult.Error(e.localizedMessage ?: "Error desconocido durante el registro.")
         }
     }
 }
