@@ -9,10 +9,13 @@ import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.LaunchedEffect
+import androidx.compose.runtime.getValue
 import com.example.peekstore.R
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.text.input.KeyboardType
 import androidx.compose.ui.unit.dp
@@ -22,6 +25,7 @@ import com.example.peekstore.presentation.login.components.ZetaImageLogo
 import com.example.peekstore.presentation.login.components.ZetaOutlinedTextField
 import com.example.peekstore.presentation.login.components.ZetaText
 import com.example.peekstore.presentation.login.components.ZetaTextLink
+import com.example.peekstore.presentation.login.state.AuthResult
 import com.example.peekstore.presentation.login.state.LoginState
 import com.example.peekstore.presentation.login.viewmodel.LoginViewModel
 import com.example.peekstore.ui.theme.ColorButton
@@ -30,8 +34,31 @@ import com.example.peekstore.ui.theme.ColorButton
 @Composable
 fun LoginScreen(
     loginViewModel: LoginViewModel,
-    loginState: LoginState
+    loginState: LoginState,
+    onLoginSuccess: (String) -> Unit // Navegar a Home con UID
 ) {
+
+
+    val context = LocalContext.current
+
+    val authResult by loginViewModel.authResult
+
+    LaunchedEffect(authResult) {
+        when (authResult){
+            is AuthResult.Success -> {
+                val uid = (authResult as AuthResult.Success).uid
+                onLoginSuccess(uid) // navegar a home
+            }
+            is AuthResult.Error -> {
+
+            }
+            else -> Unit
+        }
+    }
+
+
+
+
     Box(
         modifier = Modifier
             .fillMaxSize()
@@ -105,7 +132,7 @@ fun LoginScreen(
             )
         }
         ZetaButtonBasic(
-            onClick = { },
+            onClick = { loginViewModel.login(context,onLoginSuccess) },
             backgroundColor = ColorButton,
             text = "Login", color = Color.White,
             modifier = Modifier
