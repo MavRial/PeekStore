@@ -52,12 +52,12 @@ class HomeViewModel(
     }
 
     fun logout(
-        uid: String,
+
         context : Context,
         onLoggedOut: ()-> Unit
     ){
         viewModelScope.launch {
-            Log.d("Logout", "User $uid logged out")
+
             TokenManager.clearUserUid(context)
             onLoggedOut()
         }

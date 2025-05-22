@@ -28,14 +28,23 @@ class MainActivity : ComponentActivity() {
         setContent {
             val context = LocalContext.current
             val navController = rememberNavController()
-            val userUid by TokenManager.getUserUid(context).collectAsState(initial = "")
+            val userUidNullable by TokenManager.getUserUid(context).collectAsState(initial = null)
+            val userUid = userUidNullable ?: ""
 
             LaunchedEffect(userUid) {
-                if (!userUid.isNullOrEmpty()) {
-                    userUid?.let { uid ->
-                        navController.navigate(AppScreen.HomeScreen.passUid(uid)){
-                            popUpTo(0)
+                if (!userUid.isNotEmpty()) {
+                    navController.navigate(AppScreen.HomeScreen.passUid(userUid)) {
+
+                        popUpTo(AppScreen.LoginScreen.route) {
+                            inclusive = true
                         }
+                        launchSingleTop = true
+                    }
+                } else {
+
+                    navController.navigate(AppScreen.LoginScreen.route) {
+                        popUpTo(0)
+                        launchSingleTop = true
                     }
                 }
             }

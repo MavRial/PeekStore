@@ -62,7 +62,7 @@ fun HomeScreen(
 
                     LogoutButtom(
                         onLogout = {
-                            homeViewModel.logout(uid = uid, context = context){
+                            homeViewModel.logout(context){
                                 onLogout()
                             }
                         }
