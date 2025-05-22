@@ -1,7 +1,5 @@
 package com.example.peekstore.presentation.home.viewmodel
 
-import android.content.Context
-import android.util.Log
 import androidx.lifecycle.ViewModel
 import com.example.peekstore.data.dto.ProductDto
 import com.example.peekstore.data.repository.ProductRepositoryImpl
@@ -9,9 +7,11 @@ import com.example.peekstore.domain.repository.ProductRepository
 import androidx.compose.runtime.State
 import androidx.compose.runtime.mutableStateOf
 import androidx.lifecycle.viewModelScope
-import com.example.peekstore.data.service.TokenManager
+import com.example.peekstore.data.service.FirebaseModule
 import com.example.peekstore.presentation.home.state.HomeState
+import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
+import kotlinx.coroutines.withContext
 
 
 class HomeViewModel(
@@ -51,14 +51,11 @@ class HomeViewModel(
         _state.value = HomeState.Success(filtered)
     }
 
-    fun logout(
-
-        context : Context,
-        onLoggedOut: ()-> Unit
-    ){
+    fun logout(onLoggedOut: () -> Unit) {
         viewModelScope.launch {
-
-            TokenManager.clearUserUid(context)
+            withContext(Dispatchers.IO) {
+                FirebaseModule.auth.signOut()
+            }
             onLoggedOut()
         }
     }

@@ -1,5 +1,6 @@
 package com.example.peekstore.presentation.login
 
+import android.widget.Toast
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
@@ -11,6 +12,7 @@ import androidx.compose.foundation.layout.padding
 import androidx.compose.material3.CircularProgressIndicator
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
+import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
@@ -38,25 +40,22 @@ import com.example.peekstore.ui.theme.ColorButton
 @Composable
 fun LoginScreen(
     loginViewModel: LoginViewModel,
-    onLoginSuccess: (String) -> Unit // Navegar a Home con UID
+    onLoginSuccess: () -> Unit // Navegar a Home con UID
 ) {
     val loginState by loginViewModel.loginState
     val context = LocalContext.current
     var isLoginMode by remember { mutableStateOf(true) }
-    val authResult by loginViewModel.authResult
+    val authResult = loginViewModel.authResult.value
+    val user by loginViewModel.currentUser.collectAsState()
 
-    LaunchedEffect(authResult) {
-        when (authResult){
-            is AuthResult.Success -> {
-                val uid = (authResult as AuthResult.Success).uid
-                onLoginSuccess(uid) // navegar a home
-            }
-            is AuthResult.Error -> {
 
+
+    LaunchedEffect(user) {
+        if (user != null) {
+            onLoginSuccess()
             }
-            else -> Unit
         }
-    }
+
 
 
 
@@ -155,9 +154,9 @@ fun LoginScreen(
                 ZetaButtonBasic(
                     onClick = {
                         if (isLoginMode){
-                            loginViewModel.login(context, onLoginSuccess)
+                            loginViewModel.login()
                         }else {
-                            loginViewModel.register(context, onLoginSuccess )
+                            loginViewModel.register()
                         }
                     },
 

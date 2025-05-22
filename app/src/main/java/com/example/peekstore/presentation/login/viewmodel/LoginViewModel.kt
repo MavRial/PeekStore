@@ -6,10 +6,11 @@ import androidx.compose.runtime.mutableStateOf
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.example.peekstore.data.repository.AuthRepositoryImpl
-import com.example.peekstore.data.service.TokenManager
 import com.example.peekstore.domain.repository.AuthRepository
 import com.example.peekstore.presentation.login.state.AuthResult
 import com.example.peekstore.presentation.login.state.LoginState
+import kotlinx.coroutines.flow.SharingStarted
+import kotlinx.coroutines.flow.stateIn
 import kotlinx.coroutines.launch
 
 class LoginViewModel(
@@ -21,6 +22,12 @@ class LoginViewModel(
 
     private val _loginState = mutableStateOf(LoginState())
     val loginState: State<LoginState> get() = _loginState
+
+    val currentUser = authRepository.currentUser.stateIn(
+        scope = viewModelScope,
+        started = SharingStarted.Eagerly,
+        initialValue = null
+    )
 
     fun onUsernameChanged(username: String) {
         _loginState.value = _loginState.value.copy(username = username)
@@ -36,7 +43,7 @@ class LoginViewModel(
     }
 
 
-    fun login(context: Context, onLoginSucces: (String) -> Unit){
+    fun login(){
         viewModelScope.launch {
              _authResult.value = AuthResult.Loading
 
@@ -45,25 +52,11 @@ class LoginViewModel(
                 loginState.value.password
             )
 
-            when (result){
-                is AuthResult.Success -> {
-                    // guardamos el uid en data store
-                    TokenManager.saveUserUid(context,result.uid)
-
-                    _authResult.value = result
-
-                    onLoginSucces(result.uid)
-                }
-                is AuthResult.Error -> {
-                    _authResult.value = result
-                }
-
-                else -> {}
-            }
+            _authResult.value = result
         }
     }
 
-    fun register (context: Context,onLoginSucces: (String) -> Unit){
+    fun register(){
         viewModelScope.launch {
             _authResult.value = AuthResult.Loading
 
@@ -72,19 +65,14 @@ class LoginViewModel(
                 loginState.value.password
             )
 
-            when(result){
-                is AuthResult.Success -> {
-                    TokenManager.saveUserUid(context,result.uid)
-                    _authResult.value = result
-                    onLoginSucces(result.uid)
-                }
-
-                is AuthResult.Error -> {
-                    _authResult.value = result
-                }
-                else -> {}
-            }
+            _authResult.value = result
         }
     }
+
+    fun logout(){
+        authRepository.signout()
+    }
+
+
 
 }

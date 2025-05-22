@@ -1,6 +1,7 @@
 package com.example.peekstore.presentation.home
 
 
+import android.util.Log
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Spacer
@@ -26,11 +27,9 @@ import com.example.peekstore.presentation.home.viewmodel.HomeViewModel
 
 @Composable
 fun HomeScreen(
-    uid: String,
     homeViewModel: HomeViewModel,
     onLogout: () -> Unit,
     ) {
-    val context = LocalContext.current
     val state = homeViewModel.state.value
     val searchQuery = homeViewModel.searchQuery.value
 
@@ -62,9 +61,11 @@ fun HomeScreen(
 
                     LogoutButtom(
                         onLogout = {
-                            homeViewModel.logout(context){
-                                onLogout()
-                            }
+                            homeViewModel.logout(
+                                onLoggedOut = {
+                                    onLogout()
+                                }
+                            )
                         }
                     )
                 }

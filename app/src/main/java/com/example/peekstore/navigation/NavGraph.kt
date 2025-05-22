@@ -1,55 +1,57 @@
 package com.example.peekstore.navigation
 import androidx.navigation.compose.NavHost
 import androidx.compose.runtime.Composable
-import androidx.compose.runtime.collectAsState
+import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.saveable.rememberSaveable
+import androidx.compose.runtime.setValue
+import androidx.lifecycle.viewmodel.compose.viewModel
 import androidx.navigation.NavHostController
 import androidx.navigation.NavType
 import androidx.navigation.compose.composable
 import androidx.navigation.navArgument
-import com.example.peekstore.data.service.TokenManager
 import com.example.peekstore.presentation.home.HomeScreen
 import com.example.peekstore.presentation.home.viewmodel.HomeViewModel
 import com.example.peekstore.presentation.login.LoginScreen
 import com.example.peekstore.presentation.login.viewmodel.LoginViewModel
-
+import kotlinx.coroutines.flow.firstOrNull
 
 
 @Composable
-fun NavGraph(navController: NavHostController, loginViewModel: LoginViewModel,homeViewModel: HomeViewModel) {
+fun NavGraph(
+     navController: NavHostController,
+     loginViewModel: LoginViewModel,
+     homeViewModel: HomeViewModel,
+     startDestination: String
+) {
+     NavHost(
+          navController = navController,
+          startDestination = startDestination
+     ) {
 
-
-    NavHost(navController= navController,
-        startDestination = AppScreen.LoginScreen.route
-    ){
-        composable(AppScreen.LoginScreen.route){
-            LoginScreen(
-                loginViewModel,
-                onLoginSuccess = { uid ->
-                    navController.navigate(AppScreen.HomeScreen.passUid(uid)){
-                        popUpTo(AppScreen.LoginScreen.route) { inclusive = true}
+          composable(AppScreen.LoginScreen.route){
+               LoginScreen(
+                    loginViewModel = loginViewModel,
+                    onLoginSuccess = {
+                         navController.navigate(AppScreen.HomeScreen.route) {
+                              popUpTo(navController.graph.startDestinationId) { inclusive = true }
+                         }
                     }
-                }
-            )
-        }
-        composable(
-            AppScreen.HomeScreen.route,
-            arguments = listOf(navArgument("uid"){type = NavType.StringType})
-            ){ backStackEntry ->
-            val uid = backStackEntry.arguments?.getString("uid") ?: ""
+               )
+          }
 
-            HomeScreen(
-                uid = uid,
-                homeViewModel = homeViewModel,
-                onLogout = {
-                    navController.navigate(AppScreen.LoginScreen.route){
-                        popUpTo(AppScreen.HomeScreen.route) { inclusive = true}
+          composable(AppScreen.HomeScreen.route){
+               HomeScreen(
+                    homeViewModel = homeViewModel,
+                    onLogout = {
+                         navController.navigate(AppScreen.LoginScreen.route) {
+                              popUpTo(navController.graph.startDestinationId) { inclusive = true }
+                         }
                     }
-                }
-            )
-        }
-
-    }
+               )
+          }
+     }
 }
 
 
