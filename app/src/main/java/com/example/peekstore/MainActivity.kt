@@ -32,7 +32,7 @@ class MainActivity : ComponentActivity() {
             val userUid = userUidNullable ?: ""
 
             LaunchedEffect(userUid) {
-                if (!userUid.isNotEmpty()) {
+                if (userUid.isEmpty()) {
                     navController.navigate(AppScreen.HomeScreen.passUid(userUid)) {
 
                         popUpTo(AppScreen.LoginScreen.route) {
