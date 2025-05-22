@@ -1,6 +1,7 @@
 package com.example.peekstore.presentation.home.viewmodel
 
 import android.content.Context
+import android.util.Log
 import androidx.lifecycle.ViewModel
 import com.example.peekstore.data.dto.ProductDto
 import com.example.peekstore.data.repository.ProductRepositoryImpl
@@ -52,10 +53,12 @@ class HomeViewModel(
     }
 
     fun logout(
+        uid: String,
         context : Context,
         onLoggedOut: ()-> Unit
     ){
         viewModelScope.launch {
+            Log.d("Logout", "User $uid logged out")
             TokenManager.clearUserUid(context)
             onLoggedOut()
         }
