@@ -55,6 +55,10 @@ dependencies {
     implementation("androidx.compose.material:material-icons-extended")
     //coil
     implementation ("io.coil-kt:coil-compose:2.4.0")
+    implementation(libs.androidx.navigation.runtime.android)
+    implementation(libs.androidx.navigation.runtime.desktop)
+    implementation(libs.androidx.navigation.runtime.jvmstubs)
+    implementation(libs.androidx.navigation.compose.android)
     implementation(libs.navigation.compose)
     implementation(libs.kotlinx.serialization.json)
     implementation(libs.firebase.auth)
