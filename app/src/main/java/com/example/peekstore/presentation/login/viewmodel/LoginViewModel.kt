@@ -1,6 +1,6 @@
 package com.example.peekstore.presentation.login.viewmodel
 
-import android.content.Context
+
 import androidx.compose.runtime.State
 import androidx.compose.runtime.mutableStateOf
 import androidx.lifecycle.ViewModel
@@ -68,11 +68,4 @@ class LoginViewModel(
             _authResult.value = result
         }
     }
-
-    fun logout(){
-        authRepository.signout()
-    }
-
-
-
 }

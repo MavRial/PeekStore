@@ -1,6 +1,6 @@
 package com.example.peekstore.presentation.login
 
-import android.widget.Toast
+
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
@@ -43,7 +43,6 @@ fun LoginScreen(
     onLoginSuccess: () -> Unit // Navegar a Home con UID
 ) {
     val loginState by loginViewModel.loginState
-    val context = LocalContext.current
     var isLoginMode by remember { mutableStateOf(true) }
     val authResult = loginViewModel.authResult.value
     val user by loginViewModel.currentUser.collectAsState()
