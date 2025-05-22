@@ -20,7 +20,7 @@ class LoginViewModel(
     private val _authResult = mutableStateOf<AuthResult>(AuthResult.Idle)
     val authResult: State<AuthResult> get() = _authResult
 
-    private val _loginState: MutableState<LoginState> = mutableStateOf(LoginState())
+    private val _loginState = mutableStateOf(LoginState())
     val loginState: State<LoginState> get() = _loginState
 
     fun onUsernameChanged(username: String) {

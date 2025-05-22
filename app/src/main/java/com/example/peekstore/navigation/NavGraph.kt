@@ -2,23 +2,39 @@ package com.example.peekstore.navigation
 import androidx.navigation.compose.NavHost
 import androidx.compose.runtime.Composable
 import androidx.navigation.NavHostController
+import androidx.navigation.NavType
 import androidx.navigation.compose.composable
+import androidx.navigation.navArgument
+import com.example.peekstore.presentation.home.HomeScreen
+import com.example.peekstore.presentation.home.HomeViewModel
 import com.example.peekstore.presentation.login.LoginScreen
 import com.example.peekstore.presentation.login.viewmodel.LoginViewModel
 
 
 @Composable
-fun NavGraph(navController: NavHostController, loginViewModel: LoginViewModel) {
+fun NavGraph(navController: NavHostController, loginViewModel: LoginViewModel,homeViewModel: HomeViewModel) {
 
 
     NavHost(navController= navController,
         startDestination = AppScreen.LoginScreen.route
     ){
         composable(AppScreen.LoginScreen.route){
-            LoginScreen(loginViewModel, navController)
+            LoginScreen(
+                loginViewModel,
+                navcontrol = navController,
+                onLoginSuccess = { uid ->
+                    navController.navigate(AppScreen.HomeScreen.passUid(uid)){
+                        popUpTo(AppScreen.LoginScreen) { inclusive = true}
+                    }
+                }
+            )
         }
-        composable(AppScreen.HomeScreen.route){
-            //HomeScreen(navController)
+        composable(
+            AppScreen.HomeScreen.route,
+            arguments = listOf(navArgument("uid"){type = NavType.StringType})
+            ){ backStackEntry ->
+            val uid = backStackEntry.arguments?.getString("uid") ?: ""
+            HomeScreen(uid = uid)
         }
 
     }

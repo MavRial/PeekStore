@@ -1,6 +1,8 @@
 package com.example.peekstore.navigation
 
 sealed class AppScreen(val route:String) {
-    object LoginScreen:AppScreen("loginScreen")
-    object HomeScreen:AppScreen("homeScreen")
+    data object LoginScreen:AppScreen("loginScreen")
+    data object HomeScreen : AppScreen("homeScreen/{uid}") {
+        fun passUid(uid: String) = "homeScreen/$uid"
+    }
 }

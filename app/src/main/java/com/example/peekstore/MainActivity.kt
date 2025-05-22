@@ -9,15 +9,21 @@ import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
 import androidx.compose.ui.platform.LocalContext
+import androidx.lifecycle.ViewModel
 import androidx.navigation.compose.rememberNavController
 import com.example.peekstore.data.service.TokenManager
+import com.example.peekstore.navigation.AppScreen
+import com.example.peekstore.navigation.NavGraph
+import com.example.peekstore.presentation.home.HomeViewModel
 import com.example.peekstore.presentation.login.LoginScreen
+import com.example.peekstore.presentation.login.state.LoginState
 import com.example.peekstore.presentation.login.viewmodel.LoginViewModel
 
 
 
 class MainActivity : ComponentActivity() {
     private val loginViewModel: LoginViewModel by viewModels()
+    private val homeViewModel: HomeViewModel by viewModels()
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -29,21 +35,14 @@ class MainActivity : ComponentActivity() {
 
             LaunchedEffect(userUid) {
                 if (!userUid.isNullOrEmpty()) {
-                    navController.navigate("home/${userUid}") {
-                        popUpTo(0) // elimina todo el backstack
+                    userUid?.let { uid ->
+                        navController.navigate(AppScreen.HomeScreen.passUid(uid)){
+                            popUpTo(0)
+                        }
                     }
                 }
             }
-
-                    LoginScreen(
-                        loginViewModel = loginViewModel,
-                        loginState = loginViewModel.loginState.value,
-                        onLoginSuccess = { uid ->
-                            navController.navigate("home/$uid"){
-                                popUpTo("login"){ inclusive = true}
-                            }
-                        }
-                    )
+            NavGraph(navController = navController, loginViewModel = loginViewModel , homeViewModel = homeViewModel,)
         }
     }
 }
