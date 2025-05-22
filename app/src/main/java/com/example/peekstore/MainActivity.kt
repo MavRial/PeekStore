@@ -40,10 +40,6 @@ class MainActivity : ComponentActivity() {
                 }
             }
 
-
-            NavHost(navController = navController, startDestination = "login"){
-
-                composable("login") {
                     LoginScreen(
                         loginViewModel = loginViewModel,
                         loginState = loginViewModel.loginState.value,
@@ -53,17 +49,6 @@ class MainActivity : ComponentActivity() {
                             }
                         }
                     )
-                }
-
-                composable(
-                    route = "home/{uid}",
-                    arguments = listOf(navArgument("uid") {type = NavType.StringType})
-                ) { backStackEntry ->
-                    val uid = backStackEntry.arguments?.getString("uid") ?: ""
-                    HomeScreen(uid = uid)
-                }
-            }
-
         }
     }
 }
