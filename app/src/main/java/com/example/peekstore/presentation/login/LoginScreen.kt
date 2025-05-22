@@ -17,12 +17,12 @@ import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.text.input.KeyboardType
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import androidx.navigation.NavHostController
 import com.example.peekstore.presentation.login.components.ZetaButtonBasic
 import com.example.peekstore.presentation.login.components.ZetaImageLogo
 import com.example.peekstore.presentation.login.components.ZetaOutlinedTextField
 import com.example.peekstore.presentation.login.components.ZetaText
 import com.example.peekstore.presentation.login.components.ZetaTextLink
-import com.example.peekstore.presentation.login.state.LoginState
 import com.example.peekstore.presentation.login.viewmodel.LoginViewModel
 import com.example.peekstore.ui.theme.ColorButton
 
@@ -30,7 +30,7 @@ import com.example.peekstore.ui.theme.ColorButton
 @Composable
 fun LoginScreen(
     loginViewModel: LoginViewModel,
-    loginState: LoginState
+    loginState: NavHostController
 ) {
     Box(
         modifier = Modifier
