@@ -9,7 +9,6 @@ import com.example.peekstore.domain.repository.ProductRepository
 import androidx.compose.runtime.State
 import androidx.compose.runtime.mutableStateOf
 import androidx.lifecycle.viewModelScope
-import com.example.peekstore.data.service.FirebaseModule
 import com.example.peekstore.data.service.TokenManager
 import com.example.peekstore.presentation.home.state.HomeState
 import kotlinx.coroutines.launch
