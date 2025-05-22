@@ -6,7 +6,7 @@ import androidx.navigation.NavType
 import androidx.navigation.compose.composable
 import androidx.navigation.navArgument
 import com.example.peekstore.presentation.home.HomeScreen
-import com.example.peekstore.presentation.home.HomeViewModel
+import com.example.peekstore.presentation.home.viewmodel.HomeViewModel
 import com.example.peekstore.presentation.login.LoginScreen
 import com.example.peekstore.presentation.login.viewmodel.LoginViewModel
 
@@ -33,7 +33,16 @@ fun NavGraph(navController: NavHostController, loginViewModel: LoginViewModel,ho
             arguments = listOf(navArgument("uid"){type = NavType.StringType})
             ){ backStackEntry ->
             val uid = backStackEntry.arguments?.getString("uid") ?: ""
-            HomeScreen(uid = uid)
+
+            HomeScreen(
+                uid = uid,
+                homeViewModel = homeViewModel,
+                onLogout = {
+                    navController.navigate(AppScreen.LoginScreen.route){
+                        popUpTo(AppScreen.HomeScreen.route) { inclusive = true}
+                    }
+                }
+            )
         }
 
     }
