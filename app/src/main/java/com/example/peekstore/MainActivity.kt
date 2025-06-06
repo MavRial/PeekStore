@@ -4,44 +4,59 @@ import android.os.Bundle
 import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
 import androidx.activity.enableEdgeToEdge
-import androidx.compose.foundation.layout.fillMaxSize
-import androidx.compose.foundation.layout.padding
-import androidx.compose.material3.Scaffold
-import androidx.compose.material3.Text
-import androidx.compose.runtime.Composable
-import androidx.compose.ui.Modifier
-import androidx.compose.ui.tooling.preview.Preview
-import com.example.peekstore.ui.theme.PeekStoreTheme
+import androidx.activity.viewModels
+import androidx.compose.runtime.LaunchedEffect
+import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.remember
+import androidx.compose.runtime.setValue
+import androidx.navigation.compose.rememberNavController
+import com.example.peekstore.data.service.FirebaseModule
+import com.example.peekstore.navigation.AppScreen
+import com.example.peekstore.navigation.NavGraph
+import com.example.peekstore.presentation.home.viewmodel.HomeViewModel
+import com.example.peekstore.presentation.login.viewmodel.LoginViewModel
+import com.google.firebase.auth.FirebaseAuth
+
+import kotlinx.coroutines.awaitCancellation
+
 
 class MainActivity : ComponentActivity() {
+    private val loginViewModel: LoginViewModel by viewModels()
+    private val homeViewModel: HomeViewModel by viewModels()
+
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         enableEdgeToEdge()
         setContent {
-            PeekStoreTheme {
-                Scaffold(modifier = Modifier.fillMaxSize()) { innerPadding ->
-                    Greeting(
-                        name = "Android",
-                        modifier = Modifier.padding(innerPadding)
-                    )
+
+            val navController = rememberNavController()
+            var startDestination by remember { mutableStateOf<String?>(null) }
+
+
+            LaunchedEffect(Unit) {
+                val listener = FirebaseAuth.AuthStateListener { auth ->
+                    val user = auth.currentUser
+                    startDestination = if (user != null) {
+                        AppScreen.HomeScreen.route
+                    } else {
+                        AppScreen.LoginScreen.route
+                    }
                 }
+                FirebaseModule.auth.addAuthStateListener(listener)
+
+                awaitCancellation()
+            }
+
+            startDestination?.let {
+                NavGraph(
+                    navController = navController,
+                    loginViewModel = loginViewModel,
+                    homeViewModel = homeViewModel,
+                    startDestination = it
+                )
             }
         }
     }
 }
 
-@Composable
-fun Greeting(name: String, modifier: Modifier = Modifier) {
-    Text(
-        text = "Hello $name!",
-        modifier = modifier
-    )
-}
-
-@Preview(showBackground = true)
-@Composable
-fun GreetingPreview() {
-    PeekStoreTheme {
-        Greeting("Android")
-    }
-}
